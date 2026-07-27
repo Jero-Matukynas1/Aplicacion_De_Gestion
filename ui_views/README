@@ -1,0 +1,4 @@
+Dividir la interfaz en diferentes archivos visual:
+pantalla para el sistema de logueo de administradores y conductores. 
+Luego, tendrás vistas separadas donde los administradores pueden añadir, borrar y modificar lugares. 
+Finalmente, otra vista donde los conductores pueden buscar lugares disponibles, ver detalles y reservar un lugar.

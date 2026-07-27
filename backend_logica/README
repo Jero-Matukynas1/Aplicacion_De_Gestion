@@ -1,0 +1,3 @@
+En este módulo procesás las reglas del negocio.
+Por ejemplo, validar que un lugar no se pueda reservar si ya está ocupado, 
+o verificar las credenciales de los usuarios.

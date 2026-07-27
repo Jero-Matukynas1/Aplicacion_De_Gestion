@@ -1,0 +1,2 @@
+Aquí aislas todo lo relacionado a SQLite. conexion.py se encarga de crear la base de datos y conectarse, 
+mientras que consultas.py maneja los inserts, selects y updates de lugares y usuarios.

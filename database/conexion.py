@@ -1,12 +1,12 @@
 import sqlite3 as sql
 import os
-
+#le indicamos donde crear el archivo .db en este caso en el directorio database
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 ruta_db = os.path.join(directorio_actual, 'app_gestion.db')
 conexion = sql.connect(ruta_db)
 
 
-conexion = sql.connect('app_gestion.db')
+
 cursor = conexion.cursor()
 
 # activas las claves foraneas sqlite las trae desactivadas

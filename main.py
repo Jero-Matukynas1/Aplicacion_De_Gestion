@@ -184,7 +184,7 @@ def main(pagina: ft.Page):
         pagina.clean()
         pagina.vertical_alignment = ft.MainAxisAlignment.START
 
-        texto_bienvenida = ft.Text(f"Bienvenido {usuario_actual[1]}", size=22, weight=ft.FontWeight.BOLD)
+        texto_bienvenida = ft.Text(f"Bienvenido {usuario_actual[1]}", size=22, weight=ft.FontWeight.BOLD) # pyright: ignore[reportOptionalSubscript]
         texto_pregunta = ft.Text("¿Qué opción desea?:", size=16)
         
         boton_buscar = ft.FilledButton(

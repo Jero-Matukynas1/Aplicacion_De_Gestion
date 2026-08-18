@@ -1,6 +1,6 @@
 from database.conexion import obtener_conexion
 
-#CREADO CON IA
+
 def registrar_usuario(mail, contraseña, nombre, dni, rol="Conductor"):
     """
     Registra un nuevo usuario en la base de datos.
@@ -13,16 +13,16 @@ def registrar_usuario(mail, contraseña, nombre, dni, rol="Conductor"):
         # Obtener id_rol según el tipo seleccionando de TipoUsuario
         cursor.execute("SELECT id_rol FROM TipoUsuario WHERE rol_usuario = ?", (rol,))
         resultado_rol = cursor.fetchone()
-        id_rol = resultado_rol[0] if resultado_rol else 2 # Por defecto 2 (Conductor)
+        id_rol = resultado_rol[0] if resultado_rol else 2 
 
-        # 1. Insertar en la tabla Usuarios
+        #Insertar en la tabla Usuarios
         cursor.execute(
             "INSERT INTO Usuarios (mail, contraseña, id_rol) VALUES (?, ?, ?)",
             (mail, contraseña, id_rol)
         )
         id_usuario = cursor.lastrowid
 
-        # 2. Insertar en la tabla Conductores
+        #Insertar en la tabla Conductores
         cursor.execute(
             "INSERT INTO Conductores (nombre, dni, id_usuario) VALUES (?, ?, ?)",
             (nombre, int(dni), id_usuario)
@@ -60,7 +60,7 @@ import flet as ft
 from database.conexion import crear_tablas
 from database.consultas import verificar_credenciales, registrar_usuario
 
-#CREADO CON IA
+
 def main(pagina: ft.Page):
     # Asegura que la base de datos y sus tablas estén creadas al iniciar
     crear_tablas()
@@ -73,7 +73,7 @@ def main(pagina: ft.Page):
     # Variable para guardar la información del usuario en sesión
     usuario_actual = None
 
-    # --- VISTA 1: INICIO DE SESIÓN ---
+    #INICIO DE SESIÓN
     def mostrar_login():
         pagina.clean()
         pagina.vertical_alignment = ft.MainAxisAlignment.CENTER
@@ -116,7 +116,7 @@ def main(pagina: ft.Page):
             boton_ir_registro
         )
 
-    # --- VISTA 2: REGISTRO DE USUARIO ---
+    #REGISTRO DE USUARIO
     def mostrar_registro():
         pagina.clean()
         pagina.vertical_alignment = ft.MainAxisAlignment.CENTER
@@ -179,7 +179,7 @@ def main(pagina: ft.Page):
             boton_volver
         )
 
-    # --- VISTA 3: MENÚ PRINCIPAL ---
+    #MENÚ PRINCIPAL
     def mostrar_menu_principal():
         pagina.clean()
         pagina.vertical_alignment = ft.MainAxisAlignment.START
@@ -201,7 +201,7 @@ def main(pagina: ft.Page):
             boton_cerrar_sesion
         )
 
-    # --- VISTA 4: OPCIONES DE ESTACIONAMIENTO ---
+    #OPCIONES DE ESTACIONAMIENTO
     def mostrar_opciones_estacionamiento():
         pagina.clean()
 
@@ -216,7 +216,7 @@ def main(pagina: ft.Page):
 
         pagina.add(titulo_zona, opcion_centro, opcion_norte, boton_volver)
 
-    # Inicia la aplicación mostrando la pantalla de login
+    
     mostrar_login()
 
 ft.app(target=main)

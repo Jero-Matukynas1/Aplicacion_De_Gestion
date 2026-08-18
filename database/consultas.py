@@ -1,8 +1,6 @@
 from database.conexion import obtener_conexion
 
-# ==========================================
-# 1. AUTENTICACIÓN Y USUARIOS
-# ==========================================
+
 
 def verificar_credenciales(email, clave):
     """Verifica el correo y contraseña. Retorna los datos del usuario si coincide."""
@@ -27,23 +25,23 @@ def registrar_usuario(mail, contraseña, nombre, dni, rol="Conductor"):
     cursor = conexion.cursor()
     
     try:
-        # 1. Autoreparación: Garantiza que los roles existan en TipoUsuario
+        # Garantiza que los roles existan en TipoUsuario
         cursor.execute("INSERT OR IGNORE INTO TipoUsuario (id_rol, rol_usuario) VALUES (1, 'Administrador')")
         cursor.execute("INSERT OR IGNORE INTO TipoUsuario (id_rol, rol_usuario) VALUES (2, 'Conductor')")
 
-        # 2. Buscar id_rol
+        #Buscar id_rol
         cursor.execute("SELECT id_rol FROM TipoUsuario WHERE rol_usuario = ?", (rol,))
         res_rol = cursor.fetchone()
         id_rol = res_rol[0] if res_rol else 2
 
-        # 3. Insertar Usuario
+        #Insertar Usuario
         cursor.execute(
             "INSERT INTO Usuarios (mail, contraseña, id_rol) VALUES (?, ?, ?)",
             (mail, contraseña, id_rol)
         )
         id_usuario = cursor.lastrowid
 
-        # 4. Insertar Conductor
+        #Insertar Conductor
         cursor.execute(
             "INSERT INTO Conductores (nombre, dni, id_usuario) VALUES (?, ?, ?)",
             (nombre, int(dni), id_usuario)
@@ -74,9 +72,7 @@ def obtener_id_conductor(id_usuario):
     return res[0] if res else None
 
 
-# ==========================================
-# 2. GESTIÓN DE VEHÍCULOS
-# ==========================================
+
 
 def registrar_vehiculo(patente, id_conductor, id_tipo_vehiculo):
     """Registra una nueva patente asociada a un conductor."""
@@ -113,9 +109,7 @@ def obtener_vehiculos_conductor(id_conductor):
     return vehiculos
 
 
-# ==========================================
-# 3. ZONAS Y LUGARES DE ESTACIONAMIENTO
-# ==========================================
+
 
 def obtener_lugares_por_zona(piso_o_sector):
     """Retorna los lugares según el sector (ej. 'Centro', 'Norte') con su estado."""
@@ -145,23 +139,21 @@ def agregar_lugar_estacionamiento(num_lugar, piso_o_sector, precio, id_tipo_vehi
     conexion.close()
 
 
-# ==========================================
-# 4. RESERVAS Y PAGOS
-# ==========================================
+
 
 def crear_reserva(fecha, hora_inicio, hora_fin, id_conductor, id_lugar, id_vehiculo):
     """Crea una reserva de lugar y cambia el estado del lugar a 'Reservado' (id_estado = 3)."""
     conexion = obtener_conexion()
     cursor = conexion.cursor()
     try:
-        # 1. Crear la reserva
+        #Crear la reserva
         cursor.execute("""
             INSERT INTO Reservas (estado_reserva, fecha_reserva, hora_inicio, hora_fin, id_conductor, id_lugar, id_vehiculo)
             VALUES (1, ?, ?, ?, ?, ?, ?)
         """, (fecha, hora_inicio, hora_fin, id_conductor, id_lugar, id_vehiculo))
         id_reserva = cursor.lastrowid
 
-        # 2. Actualizar el estado del lugar a 'Reservado' (id_estado = 3)
+        #Actualizar el estado del lugar a 'Reservado'
         cursor.execute("UPDATE lugares SET id_estado = 3 WHERE id_lugar = ?", (id_lugar,))
 
         conexion.commit()

@@ -3,20 +3,24 @@ from database.conexion import obtener_conexion
 
 
 def verificar_credenciales(email, clave):
-    """Verifica el correo y contraseña. Retorna los datos del usuario si coincide."""
-    conexion = obtener_conexion()
-    cursor = conexion.cursor()
-    
-    cursor.execute("""
-        SELECT u.id_usuario, u.mail, u.id_rol, r.rol_usuario 
-        FROM Usuarios u
-        JOIN TipoUsuario r ON u.id_rol = r.id_rol
-        WHERE u.mail = ? AND u.contraseña = ?
-    """, (email, clave))
-    
-    usuario = cursor.fetchone()
-    conexion.close()
-    return usuario
+    try:
+        """Verifica el correo y contraseña. Retorna los datos del usuario si coincide."""
+        conexion = obtener_conexion()
+        cursor = conexion.cursor()
+        
+        cursor.execute("""
+            SELECT u.id_usuario, u.mail, u.id_rol, r.rol_usuario 
+            FROM Usuarios u
+            JOIN TipoUsuario r ON u.id_rol = r.id_rol
+            WHERE u.mail = ? AND u.contraseña = ?
+        """, (email, clave))
+        
+        usuario = cursor.fetchone()
+        conexion.close()
+        return usuario is not None
+    except Exception as e:
+        print(f"Error de base de datos: {e}")
+        return False
 
 
 def registrar_usuario(mail, contraseña, nombre, dni, rol="Conductor"):

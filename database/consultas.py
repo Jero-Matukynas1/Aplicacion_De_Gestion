@@ -46,10 +46,11 @@ def registrar_usuario(mail, contraseña, nombre, dni, rol="Conductor"):
         id_usuario = cursor.lastrowid
 
         #Insertar Conductor
-        cursor.execute(
-            "INSERT INTO Conductores (nombre, dni, id_usuario) VALUES (?, ?, ?)",
-            (nombre, int(dni), id_usuario)
-        )
+        if id_rol == 2:
+            cursor.execute(
+                "INSERT INTO Conductores (nombre, dni, id_usuario) VALUES (?, ?, ?)",
+                (nombre, int(dni), id_usuario)
+            )
 
         conexion.commit()
         return True, "¡Usuario registrado exitosamente!"
@@ -183,5 +184,53 @@ def registrar_pago(monto, metodo_pago, fecha_pago, id_reserva):
     except Exception as e:
         conexion.rollback()
         return False, f"Error en el pago: {str(e)}"
+    finally:
+        conexion.close()
+
+def obtener_todos_los_lugares():
+    """Retorna todos los lugares para renderizarlos en la cuadrícula de Flet."""
+    conexion = obtener_conexion()
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT l.id_lugar, l.num_lugar, tv.tipo_vehiculo, l.precio, e.descripcion AS estado
+        FROM lugares l
+        JOIN EstadoLugar e ON l.id_estado = e.id_estado
+        JOIN TipoVehiculo tv ON l.id_tipo_vehiculo = tv.id_tipo_vehiculo
+    """)
+    lugares = cursor.fetchall()
+    conexion.close()
+    return lugares
+
+def modificar_lugar(id_lugar, num_lugar, precio, id_tipo_vehiculo, id_estado):
+    """Actualiza los datos de un lugar existente."""
+    conexion = obtener_conexion()
+    cursor = conexion.cursor()
+    try:
+        cursor.execute("""
+            UPDATE lugares 
+            SET num_lugar = ?, precio = ?, id_tipo_vehiculo = ?, id_estado = ? 
+            WHERE id_lugar = ?
+        """, (num_lugar, precio, id_tipo_vehiculo, id_estado, id_lugar))
+        conexion.commit()
+        return True
+    except Exception as e:
+        conexion.rollback()
+        print(f"Error al modificar lugar: {e}")
+        return False
+    finally:
+        conexion.close()
+
+def eliminar_lugar(id_lugar):
+    """Elimina un lugar de la base de datos."""
+    conexion = obtener_conexion()
+    cursor = conexion.cursor()
+    try:
+        cursor.execute("DELETE FROM lugares WHERE id_lugar = ?", (id_lugar,))
+        conexion.commit()
+        return True
+    except Exception as e:
+        conexion.rollback()
+        print(f"Error al eliminar lugar: {e}")
+        return False
     finally:
         conexion.close()

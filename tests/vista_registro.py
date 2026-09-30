@@ -4,17 +4,12 @@ from database.consultas import registrar_usuario
 def VistaRegistro(page: ft.Page):
     txt_usuario = ft.TextField(label="Nuevo Usuario", width=300, bgcolor="white24", color="white")
     txt_password = ft.TextField(label="Contraseña", width=300, password=True, can_reveal_password=True, bgcolor="white24", color="white")
-    
+    txt_dni = ft.TextField(label="DNI", width=300, bgcolor="white24", color="white")
+    txt_email = ft.TextField(label="Email", width=300, bgcolor="white24",color="white")
     # Menú desplegable, mateo no se si hacer q el usuario elija el rol o el sistema se lo de
-    dropdown_rol = ft.Dropdown(
-        width=300,
-        options=[ft.dropdown.Option("usuario"), ft.dropdown.Option("admin")],
-        value="usuario",
-        bgcolor="white24", color="white"
-    )
-
+  
     def intentar_registro(e):
-        if registrar_usuario(txt_usuario.value, txt_password.value, dropdown_rol.value): # type: ignore
+        if registrar_usuario(txt_usuario.value,txt_email.value, txt_password.value, txt_dni.value): # type: ignore
             page.snack_bar = ft.SnackBar(ft.Text("Registro exitoso"), bgcolor="green") # type: ignore
             page.snack_bar.open = True # type: ignore
             page.go("/") # Vuelve al login al terminar
@@ -36,8 +31,9 @@ def VistaRegistro(page: ft.Page):
                 ft.Text("Registro de Usuario", size=32, weight="bold", color="white"), # type: ignore
                 ft.Divider(height=25, color="transparent"),
                 txt_usuario,
+                txt_email,
                 txt_password,
-                dropdown_rol,
+                txt_dni,
                 ft.Divider(height=20, color="transparent"),
                 btn_registrar,
                 btn_volver
